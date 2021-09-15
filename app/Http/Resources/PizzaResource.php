@@ -21,6 +21,7 @@ class PizzaResource extends JsonResource
             'variant_id' => $this->variant_id,
             'description' => $this->description,
             'price' => $this->price,
+            'images' => $this->images,
             'reveiws' => ReveiwResource::collection($this->reviews),
             'variant' => new VariantResource($this->variant)
         ];

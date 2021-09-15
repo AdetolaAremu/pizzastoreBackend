@@ -9,6 +9,7 @@ use App\Http\Resources\PizzaResource;
 use App\Models\Pizza;
 use App\Models\PizzaImage;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 class PizzaController extends Controller
@@ -20,14 +21,20 @@ class PizzaController extends Controller
         return PizzaResource::collection($pizza);
     }
 
-    public function store(PizzaCreateRequest $request)
+    public function store(Request $request)
     {
-        DB::beginTransaction();
+        $request->validate([
+            'name' => 'required',
+            'description' => 'required',
+            'price' => 'required',
+            'variant_id' => 'required'
+        ]);
 
+        DB::beginTransaction();
         try {
             $pizza = new Pizza();
             $pizza->name = $request->name;
-            $pizza->description = $pizza->description;
+            $pizza->description = $request->description;
             $pizza->price = $request->price;
             $pizza->variant_id = $request->variant_id;
             $pizza->save();
@@ -35,9 +42,9 @@ class PizzaController extends Controller
             if ($request->pizza_images) {
                 for ($i = 0; $i < count($request->pizza_images); $i++) {
                     $file = $request->pizza_images[$i];
-                    $imageName = time() . Str::random(10) . '.' . $request->pizza_images[$i]->extension();
-                    $path =  'images/pizzas/';
-                    $documentURL =  $path . '/' . $imageName;
+                    $imageName = time() . Str::random(4) . '.' . $request->pizza_images[$i]->extension();
+                    $path = "images/pizzas";
+                    $documentURL = $path . '/' . $imageName;
                     $file->move($path, $imageName);
 
                     PizzaImage::create([
@@ -50,18 +57,10 @@ class PizzaController extends Controller
 
             DB::commit();
             return response(['message' => 'Pizza Created Successfully']);
-            // Pizza::create([
-            //     'name' => $request->name,
-            //     'description' => $request->description,
-            //     "price" => $request->price,
-            //     'variant_id' => $request->variant_id
-            // ]);
         } catch (\Throwable $th) {
             DB::rollBack();
-            return response(['message' => 'Ooops, we are missing something']);
+            return response($th);
         }
-
-        return response(['message' => 'Pizza created successfully']);
     }
 
     public function show($id)
@@ -72,7 +71,7 @@ class PizzaController extends Controller
             return response(['message' => 'Pizza not found']);
         }
 
-        return PizzaResource::collection($pizza);
+        return new PizzaResource($pizza);
     }
 
     public function update(PizzaUpdateRequest $request, $id)
@@ -91,5 +90,7 @@ class PizzaController extends Controller
     public function destroy($id)
     {
         Pizza::destroy($id);
+
+        return response(["message" => 'Pizza deleted successfully']);
     }
 }
