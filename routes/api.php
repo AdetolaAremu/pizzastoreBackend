@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\AuthContoller;
 use App\Http\Controllers\Cart\CartController;
+use App\Http\Controllers\Order\OrderController;
 use App\Http\Controllers\Pizza\PizzaController;
 use App\Http\Controllers\Pizza\PizzaReviewController;
 use App\Http\Controllers\Pizza\VariantController;
@@ -29,6 +30,11 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::post('/', [CartController::class, 'addToCart']);
         Route::get('/', [CartController::class, 'getcart']);
         Route::get('/{id}', [CartController::class, 'getSpecificCart']);
-        Route::get('/{id}', [CartController::class, 'emptyCart']);
+        Route::delete('/empty', [CartController::class, 'emptyCart']);
+    });
+
+    Route::group(['prefix' => 'orders'], function () {
+        Route::get('/', [OrderController::class, 'orderHistory']);
+        Route::get('/export', [OrderController::class, 'exportcsv']);
     });
 });
