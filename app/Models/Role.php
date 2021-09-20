@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class CartItem extends Model
+class Role extends Model
 {
     use HasFactory;
 
@@ -13,8 +13,8 @@ class CartItem extends Model
 
     public $timestamps = false;
 
-    public function cart()
+    public function permissions()
     {
-        return $this->belongsTo(Cart::class);
+        return $this->belongsToMany(Permission::class, 'role_permission');
     }
 }

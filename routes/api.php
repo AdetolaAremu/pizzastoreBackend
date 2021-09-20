@@ -3,9 +3,11 @@
 use App\Http\Controllers\Auth\AuthContoller;
 use App\Http\Controllers\Cart\CartController;
 use App\Http\Controllers\Order\OrderController;
+use App\Http\Controllers\Permission\PermissionController;
 use App\Http\Controllers\Pizza\PizzaController;
 use App\Http\Controllers\Pizza\PizzaReviewController;
 use App\Http\Controllers\Pizza\VariantController;
+use App\Http\Controllers\Role\RoleController;
 use Illuminate\Support\Facades\Route;
 
 Route::post('/register', [AuthContoller::class, 'register']);
@@ -13,10 +15,15 @@ Route::post('/register', [AuthContoller::class, 'register']);
 Route::post('/login', [AuthContoller::class, 'login']);
 
 Route::group(['middleware' => 'auth:api'], function () {
+    // pizza variants
     Route::apiResource('/variants', VariantController::class);
-    Route::apiResource('/pizza-review', PizzaReviewController::class);
-    Route::apiResource('/pizzas', PizzaController::class);
 
+    // review pizza
+    Route::apiResource('/pizza-review', PizzaReviewController::class);
+
+    // Route::apiResource('/pizzas', PizzaController::class);
+
+    // pizzas
     Route::group(['prefix' =>  'pizzas'], function () {
         Route::get('/', [PizzaController::class, 'index']);
         Route::post('/', [PizzaController::class, 'store']);
@@ -33,8 +40,15 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::delete('/empty', [CartController::class, 'emptyCart']);
     });
 
+    // orders
     Route::group(['prefix' => 'orders'], function () {
         Route::get('/', [OrderController::class, 'orderHistory']);
         Route::get('/export', [OrderController::class, 'exportcsv']);
     });
+
+    // roles
+    Route::apiResource('roles', RoleController::class);
+
+    // permissions
+    Route::apiResource('permissions', PermissionController::class)->only('show');
 });
