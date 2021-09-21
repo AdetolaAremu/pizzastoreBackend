@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthContoller extends Controller
 {
+    // registration
     public function register(RegisterRequest $request)
     {
         $user = User::create($request->only('first_name', 'last_name', 'email', 'role_id') + [
@@ -22,6 +23,7 @@ class AuthContoller extends Controller
         return response(['message' => 'Registration successful'], Response::HTTP_ACCEPTED);
     }
 
+    // login
     public function login(LoginRequest $request)
     {
         if (Auth::attempt($request->only('email', 'password'))) {

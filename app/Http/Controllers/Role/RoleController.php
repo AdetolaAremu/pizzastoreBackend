@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\RoleCreateRequest;
 use App\Http\Resources\RoleResource;
 use App\Models\Role;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
@@ -14,6 +15,8 @@ class RoleController extends Controller
 {
     public function index()
     {
+        Gate::authorize('delete', 'users');
+
         return RoleResource::collection(Role::get());
     }
 

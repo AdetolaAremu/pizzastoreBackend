@@ -8,6 +8,7 @@ use App\Http\Controllers\Pizza\PizzaController;
 use App\Http\Controllers\Pizza\PizzaReviewController;
 use App\Http\Controllers\Pizza\VariantController;
 use App\Http\Controllers\Role\RoleController;
+use App\Http\Controllers\User\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::post('/register', [AuthContoller::class, 'register']);
@@ -21,7 +22,17 @@ Route::group(['middleware' => 'auth:api'], function () {
     // review pizza
     Route::apiResource('/pizza-review', PizzaReviewController::class);
 
-    // Route::apiResource('/pizzas', PizzaController::class);
+    // get logged in user
+    Route::get('/user', [UserController::class, 'currentUser']);
+
+    // users
+    Route::group(['prefix' => 'users'], function () {
+        Route::get('/', [UserController::class, 'index']);
+        Route::get('/{id}', [UserController::class, 'show']);
+        Route::put('/{id}', [UserController::class, 'updateInfo']);
+        Route::put('/{id}', [UserController::class, 'updatePassword']);
+        Route::delete('/{id}', [UserController::class, 'destroy']);
+    });
 
     // pizzas
     Route::group(['prefix' =>  'pizzas'], function () {
