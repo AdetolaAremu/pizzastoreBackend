@@ -68,5 +68,7 @@ class UserController extends Controller
                 'permissions' => $user->permissions()
             ]
         ]);
+
+        return response([$user], Response::HTTP_ACCEPTED);
     }
 }
