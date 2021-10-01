@@ -14,7 +14,7 @@ class OrderController extends Controller
     public function orderHistory()
     {
         $logged_in_user = Auth()->user();
-        $order = $logged_in_user->orders()->with('items')->latest()->paginate(10);
+        $order = $logged_in_user->carts()->with('items')->latest()->paginate(10);
         return response($order);
     }
 

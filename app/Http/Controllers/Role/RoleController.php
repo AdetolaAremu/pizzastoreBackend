@@ -25,7 +25,7 @@ class RoleController extends Controller
         $role = Role::find($id);
 
         if (!$role) {
-            return response(['message' => 'Role ID not found', Response::HTTP_NOT_FOUND]);
+            return response(['message' => 'Role ID not found'], Response::HTTP_NOT_FOUND);
         }
 
         return new RoleResource($role, Response::HTTP_ACCEPTED);

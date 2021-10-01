@@ -19,7 +19,7 @@ class CreateOrderItemsTable extends Migration
             $table->foreignId('pizza_id')->references('id')->on('pizzas');
             $table->integer('quantity');
             $table->decimal('pizza_price');
-            $table->string('price name')->nullable();
+            // $table->string('price_name')->nullable();
             $table->string('pizza_name')->nullable();
             $table->string('total_amount', 10, 2);
             $table->timestamps();

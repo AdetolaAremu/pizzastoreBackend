@@ -16,6 +16,12 @@ class UserController extends Controller
 {
     public function index()
     {
+        $admin = Gate::authorize('delete', 'users');
+
+        if (!$admin) {
+            return response(['message' => 'Unauthorized'], Response::HTTP_UNAUTHORIZED);
+        }
+
         $user = User::get();
 
         return UserResource::collection($user, Response::HTTP_ACCEPTED);

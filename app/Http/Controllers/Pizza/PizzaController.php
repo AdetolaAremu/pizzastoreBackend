@@ -10,6 +10,9 @@ use App\Models\Pizza;
 use App\Models\PizzaImage;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Gate;
+
 use Illuminate\Support\Str;
 
 class PizzaController extends Controller
@@ -23,6 +26,12 @@ class PizzaController extends Controller
 
     public function store(Request $request)
     {
+        $admin = Gate::authorize('delete', 'users');
+
+        if (!$admin) {
+            return response(['message' => 'Unauthorized'], Response::HTTP_UNAUTHORIZED);
+        }
+
         $request->validate([
             'name' => 'required',
             'description' => 'required',
@@ -76,6 +85,12 @@ class PizzaController extends Controller
 
     public function update(PizzaUpdateRequest $request, $id)
     {
+        $admin = Gate::authorize('delete', 'users');
+
+        if (!$admin) {
+            return response(['message' => 'Unauthorized'], Response::HTTP_UNAUTHORIZED);
+        }
+
         $pizza = Pizza::find($id);
 
         if (!$pizza) {
@@ -84,11 +99,17 @@ class PizzaController extends Controller
 
         $pizza->update($request->all());
 
-        return response(['message' => 'Pizza updated successfully']);
+        return response(['message' => 'Pizza updated successfully'], Response::HTTP_ACCEPTED);
     }
 
     public function destroy($id)
     {
+        $admin = Gate::authorize('delete', 'users');
+
+        if (!$admin) {
+            return response(['message' => 'Unauthorized'], Response::HTTP_UNAUTHORIZED);
+        }
+
         Pizza::destroy($id);
 
         return response(["message" => 'Pizza deleted successfully']);
