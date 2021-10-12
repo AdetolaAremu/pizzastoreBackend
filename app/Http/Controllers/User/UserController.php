@@ -10,6 +10,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
@@ -18,7 +19,7 @@ class UserController extends Controller
     {
         $admin = Gate::authorize('delete', 'users');
 
-        if (!$admin) {
+        if ($admin) {
             return response(['message' => 'Unauthorized'], Response::HTTP_UNAUTHORIZED);
         }
 
@@ -38,7 +39,7 @@ class UserController extends Controller
         return new UserResource($user, Response::HTTP_ACCEPTED);
     }
 
-    public function updateInfo(UpdateInfoRequest $request, $id)
+    public function updateInfo(UpdateInfoRequest $request)
     {
         $user = Auth::user();
 
@@ -58,9 +59,15 @@ class UserController extends Controller
         return response(['message' => 'Password updated successfully'], Response::HTTP_ACCEPTED);
     }
 
-    public function delete($id)
+    public function destroy($id)
     {
-        User::destroy($id);
+        $user = User::find($id);
+
+        if (!$user) {
+            return response(['messsage' => 'User not found'], Response::HTTP_NOT_FOUND);
+        }
+
+        $user->delete();
 
         return response(['message' => 'User deleted successfully'], Response::HTTP_ACCEPTED);
     }

@@ -30,11 +30,11 @@ class AuthServiceProvider extends ServiceProvider
         Passport::routes();
 
         Gate::define("delete", function (User $user, $model) {
-            return $user->hasAcess("delete_{$model}") || $user->hasAcess("ban_{$model}");
+            return $user->hasAcess("delete_{$model}");
         });
 
-        Gate::define("ban", function (User $user, $model) {
-            return $user->hasAcess("ban_{$model}");
-        });
+        // Gate::define("ban", function (User $user, $model) {
+        //     return $user->hasAcess("ban_{$model}");
+        // });
     }
 }

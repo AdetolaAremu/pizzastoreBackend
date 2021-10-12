@@ -16,6 +16,9 @@ Route::post('/register', [AuthContoller::class, 'register']);
 Route::post('/login', [AuthContoller::class, 'login']);
 
 Route::group(['middleware' => 'auth:api'], function () {
+    // logout
+    Route::post('/logout', [AuthContoller::class, 'logout']);
+
     // pizza variants
     Route::apiResource('/variants', VariantController::class);
 
@@ -29,8 +32,8 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::group(['prefix' => 'users'], function () {
         Route::get('/', [UserController::class, 'index']);
         Route::get('/{id}', [UserController::class, 'show']);
-        Route::put('/{id}', [UserController::class, 'updateInfo']);
-        Route::put('/{id}', [UserController::class, 'updatePassword']);
+        Route::put('/info', [UserController::class, 'updateInfo']);
+        Route::put('/password', [UserController::class, 'updatePassword']);
         Route::delete('/{id}', [UserController::class, 'destroy']);
     });
 
