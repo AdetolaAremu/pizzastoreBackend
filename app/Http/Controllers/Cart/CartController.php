@@ -98,6 +98,7 @@ class CartController extends Controller
         }
 
         return new CartResource($cart, Response::HTTP_ACCEPTED);
+        // hello there just to check
     }
 
     public function emptyCart()
