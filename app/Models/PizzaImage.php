@@ -9,9 +9,15 @@ class PizzaImage extends Model
 {
     use HasFactory;
 
-    protected $guarded = ['id'];
+    // protected $guarded = ['id'];
 
-    public function pizzaimages()
+    protected $fillable = [
+        'pizza_id',
+        'image',
+        'main'
+    ];
+
+    public function images()
     {
         return $this->belongsTo(Pizza::class);
     }

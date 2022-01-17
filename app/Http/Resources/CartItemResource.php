@@ -2,10 +2,9 @@
 
 namespace App\Http\Resources;
 
-use App\Models\Review;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class PizzaResource extends JsonResource
+class CartItemResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,13 +16,12 @@ class PizzaResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'name' => $this->name,
-            'variant_id' => $this->variant_id,
-            'description' => $this->description,
+            'cart_id' => $this->cart_id,
+            'pizza_name' => $this->pizza_name,
             'price' => $this->price,
-            'images' => $this->images,
-            'reveiws' => ReveiwResource::collection($this->reviews),
-            'variant' => new VariantResource($this->variant)
+            'quantity' => $this->quantity,
+            'image' => $this->image,
+            'total_amount' => $this->total_amount
         ];
     }
 }

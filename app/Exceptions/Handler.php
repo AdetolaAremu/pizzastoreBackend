@@ -38,4 +38,11 @@ class Handler extends ExceptionHandler
             //
         });
     }
+
+    // public function render($request, Throwable $th)
+    // {
+    //     return response([
+    //         'message' => $th->getMessage()
+    //     ], status: $th->getCode() ? $th->getCode() : 400);
+    // }
 }
