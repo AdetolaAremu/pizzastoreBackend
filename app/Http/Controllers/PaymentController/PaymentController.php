@@ -8,6 +8,7 @@ use App\Models\OrderItem;
 use App\Models\TransactionHistory;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -78,7 +79,6 @@ class PaymentController extends Controller
 
                 $user = User::find($order->user_id);
 
-
                 TransactionHistory::create([
                     'user_id' => $order->user_id,
                     'order_id' => $order->id,
@@ -92,8 +92,8 @@ class PaymentController extends Controller
 
                 $user->carts->delete();
 
-                DB::commit()
-                // return ResponseHelper::success("Payment completed");
+                DB::commit();
+                return response(["message" => "Payment completed"], Response::HTTP_OK);
                 return view('payment.paystack');
             } catch (\Exception $th) {
                 DB::rollBack();

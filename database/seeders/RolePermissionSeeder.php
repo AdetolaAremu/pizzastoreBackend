@@ -18,7 +18,7 @@ class RolePermissionSeeder extends Seeder
     {
         $permissions = Permission::all();
 
-        $super_admin = Role::whereName('Super Admin')->first();
+        $super_admin = Role::whereName('admin')->first();
 
         foreach ($permissions as $permission) {
             DB::table('role_permission')->insert([
@@ -27,22 +27,20 @@ class RolePermissionSeeder extends Seeder
             ]);
         }
 
-        $admin = Role::whereName('Admin')->first();
+        // $admin = Role::whereName('Admin')->first();
 
-        foreach ($permissions as $permission) {
-            if (!in_array($permission->name, ['edit_roles', 'delete_users'])) {
-                DB::table('role_permission')->insert([
-                    'role_id' => $admin->id,
-                    'permission_id' => $permission->id
-                ]);
-            }
-        }
+        // foreach ($permissions as $permission) {
+        //     if (!in_array($permission->name, ['edit_roles', 'delete_users'])) {
+        //         DB::table('role_permission')->insert([
+        //             'role_id' => $admin->id,
+        //             'permission_id' => $permission->id
+        //         ]);
+        //     }
+        // }
 
         $viewer = Role::whereName('User')->first();
 
         $userRole = [
-            // 'view_roles',
-            // 'view_users',
             'view_pizza',
             'view_cart',
             'edit_cart',
