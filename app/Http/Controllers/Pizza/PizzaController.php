@@ -65,7 +65,7 @@ class PizzaController extends Controller
             }
 
             DB::commit();
-            return response(['message' => 'Pizza Created Successfully']);
+            return response(['message' => 'Pizza Created Successfully'], Response::HTTP_CREATED);
         } catch (\Throwable $th) {
             DB::rollBack();
             return response($th);
@@ -77,7 +77,7 @@ class PizzaController extends Controller
         $pizza = Pizza::find($id);
 
         if (!$pizza) {
-            return response(['message' => 'Pizza not found']);
+            return response(['message' => 'Pizza not found'], Response::HTTP_NOT_FOUND);
         }
 
         return new PizzaResource($pizza);
@@ -112,6 +112,6 @@ class PizzaController extends Controller
 
         Pizza::destroy($id);
 
-        return response(["message" => 'Pizza deleted successfully']);
+        return response(["message" => 'Pizza deleted successfully'], Response::HTTP_OK);
     }
 }
