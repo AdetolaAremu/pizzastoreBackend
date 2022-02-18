@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Symfony\Contracts\Service\Attribute\Required;
 
 class UpdatePasswordRequest extends FormRequest
 {
@@ -24,6 +25,7 @@ class UpdatePasswordRequest extends FormRequest
     public function rules()
     {
         return [
+            'current_password' => 'required',
             'password' => 'required',
             'password_confirm' => 'required|same:password'
         ];

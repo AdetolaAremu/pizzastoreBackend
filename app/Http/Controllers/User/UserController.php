@@ -43,7 +43,7 @@ class UserController extends Controller
     {
         $user = Auth::user();
 
-        $user->update($request->only('first_name', 'last_name', 'email'));
+        $user->update($request->only('first_name', 'middle_name', 'last_name', 'email'));
 
         return response(['message' => 'User information successfully updated'], Response::HTTP_ACCEPTED);
     }
@@ -51,6 +51,10 @@ class UserController extends Controller
     public function updatePassword(UpdatePasswordRequest $request, $id)
     {
         $user = Auth::user();
+
+        if ($user->passsword != $request->current_password) {
+            return response(['message' => 'Current password is incorrect'], Response::HTTP_BAD_REQUEST);
+        }
 
         $user->update([
             'password' => Hash::make($request->input('password'))

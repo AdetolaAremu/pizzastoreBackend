@@ -15,6 +15,10 @@ Route::post('/register', [AuthContoller::class, 'register']);
 
 Route::post('/login', [AuthContoller::class, 'login']);
 
+// all pizzas
+Route::get('/all-pizzas', [PizzaController::class, 'index']);
+Route::get('/pizza/{id}', [PizzaController::class, 'show']);
+
 Route::group(['middleware' => 'auth:api'], function () {
     // logout
     Route::post('/logout', [AuthContoller::class, 'logout']);
@@ -39,9 +43,7 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     // pizzas
     Route::group(['prefix' =>  'pizzas'], function () {
-        Route::get('/', [PizzaController::class, 'index']);
         Route::post('/', [PizzaController::class, 'store']);
-        Route::get('/{id}', [PizzaController::class, 'show']);
         Route::put('/{id}', [PizzaController::class, 'update']);
         Route::delete('/{id}', [PizzaController::class, 'destroy']);
     });

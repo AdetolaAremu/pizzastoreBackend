@@ -17,10 +17,6 @@ class AuthContoller extends Controller
     // registration
     public function register(RegisterRequest $request)
     {
-        // User::create($request->only('first_name', 'last_name', 'email', 'role_id') + [
-        //     'password' => Hash::make($request->input('password'))
-        // ]);
-
         User::create([
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,
@@ -39,14 +35,14 @@ class AuthContoller extends Controller
         if (Auth::attempt($request->only('email', 'password'))) {
             $user = Auth::user();
 
-            $token = $user->createToken('admin')->accessToken;
+            $token = $user->createToken('user')->accessToken;
 
             $cookie = cookie('jwt', $token, 7200);
 
             return response(['token' => $token], Response::HTTP_ACCEPTED)->withCookie($cookie);
         }
 
-        return response(["error" => "Email/Password Invalid"]);
+        return response(["error" => "Email/Password Invalid"], Response::HTTP_BAD_REQUEST);
     }
 
     //logout
