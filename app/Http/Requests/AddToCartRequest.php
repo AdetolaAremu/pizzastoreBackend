@@ -24,11 +24,11 @@ class AddToCartRequest extends FormRequest
     public function rules()
     {
         return [
-            'cart_id' => 'required',
+            // 'cart_id' => 'required',
             'pizza_id' => 'required',
             'pizza_name' => 'required',
             'price' => 'required',
-            'quantity' => 'required'
+            // 'quantity' => 'required'
         ];
     }
 }

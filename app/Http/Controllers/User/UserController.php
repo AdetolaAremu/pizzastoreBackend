@@ -48,12 +48,12 @@ class UserController extends Controller
         return response(['message' => 'User information successfully updated'], Response::HTTP_ACCEPTED);
     }
 
-    public function updatePassword(UpdatePasswordRequest $request, $id)
+    public function updatePassword(UpdatePasswordRequest $request)
     {
         $user = Auth::user();
 
-        if ($user->passsword != $request->current_password) {
-            return response(['message' => 'Current password is incorrect'], Response::HTTP_BAD_REQUEST);
+        if (!Hash::check($request->current_password, $user->password)) {
+            return response(['message' => 'Current password is incorrect'], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
         $user->update([

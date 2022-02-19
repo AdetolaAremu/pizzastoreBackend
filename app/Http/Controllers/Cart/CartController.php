@@ -32,7 +32,7 @@ class CartController extends Controller
                 'pizza_id' => $request->pizza_id,
                 'pizza_name' => $request->pizza_name,
                 'price' => $request->price,
-                'quantity' => $request->quantity,
+                'quantity' => 1,
                 'total_amount' =>  (int) $request->price * (int) $request->quantity,
                 'image' => $pizzaimage->image ?? null,
             ]);
