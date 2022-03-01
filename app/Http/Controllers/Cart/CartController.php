@@ -24,6 +24,13 @@ class CartController extends Controller
                 'pizza_id',
                 $pizza->id
             )->first();
+            
+            // check if pizza id exist in the cart, if true, bounce it with an error
+            $getDBCart = CartItem::where('pizza_id', $request->pizza_id)->exists();
+
+            if ($getDBCart) {
+                return response(['message' => 'Pizza is already in your cart'], Response::HTTP_UNPROCESSABLE_ENTITY);
+            }
 
             $user_cart =  Cart::firstOrCreate(['user_id' => $user_id]);
 
@@ -33,7 +40,7 @@ class CartController extends Controller
                 'pizza_name' => $request->pizza_name,
                 'price' => $request->price,
                 'quantity' => 1,
-                'total_amount' =>  (int) $request->price * (int) $request->quantity,
+                'total_amount' =>  (int) $request->price * (int) 1,
                 'image' => $pizzaimage->image ?? null,
             ]);
 
@@ -52,10 +59,10 @@ class CartController extends Controller
                 return response(['message' => 'You do not have write access to this cart'], Response::HTTP_NOT_FOUND);
             }
 
-            $cart_item->pizza_name = $request->pizza_name;
-            $cart_item->pizza_id = $request->pizza_id;
+            // $cart_item->pizza_name = $request->pizza_name;
+            // $cart_item->pizza_id = $request->pizza_id;
             $cart_item->price = $request->price;
-            $cart_item->quantity = $request->quantity;
+            $cart_item->quantity = $request->quantity ?? $cart_item->quantity;
             $cart_item->total_amount = (int)$request->price * (int)$request->quantity;
             $cart_item->save();
 
@@ -65,11 +72,6 @@ class CartController extends Controller
 
     public function getcart()
     {
-        // $id = auth('api')->user()->cart->id ?? null;
-        // if (!$id) return response(['message' => []]);
-        // $cart = Cart::with(['items'])->find($id);
-        // return response($cart);
-        // use withSum for summing total_amount
         $logged_in_user = Auth()->user()->id;
         $cart = Cart::where('user_id', $logged_in_user)->with('items')->get();
         return CartResource::collection($cart, Response::HTTP_ACCEPTED);

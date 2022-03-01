@@ -52,6 +52,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::group(['prefix' => 'carts'], function () {
         Route::post('/', [CartController::class, 'addToCart']);
         Route::get('/', [CartController::class, 'getcart']);
+        Route::put('/update-cart/{cart_item_id}', [CartController::class, 'updatecart']);
         Route::get('/{id}', [CartController::class, 'getSpecificCart']);
         Route::delete('/empty', [CartController::class, 'emptyCart']);
     });
