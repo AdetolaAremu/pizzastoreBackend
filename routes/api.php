@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\AuthContoller;
 use App\Http\Controllers\Cart\CartController;
 use App\Http\Controllers\Order\OrderController;
+use App\Http\Controllers\PaymentController\PaymentController;
 use App\Http\Controllers\Permission\PermissionController;
 use App\Http\Controllers\Pizza\PizzaController;
 use App\Http\Controllers\Pizza\PizzaReviewController;
@@ -56,10 +57,12 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::get('/{id}', [CartController::class, 'getSpecificCart']);
         Route::delete('/empty', [CartController::class, 'emptyCart']);
     });
+    Route::delete('/cart-item/{cart_item_id}', [CartController::class, 'removecart']);
 
     // orders
     Route::group(['prefix' => 'orders'], function () {
-        Route::get('/', [OrderController::class, 'orderHistory']);
+        Route::get('/', [OrderController::class, 'getAllOrders']);
+        Route::get('/last-five-orders', [OrderController::class, 'lastFiveOrders']);
         Route::get('/export', [OrderController::class, 'exportcsv']);
     });
 
@@ -68,4 +71,11 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     // permissions
     Route::apiResource('permissions', PermissionController::class)->only('show');
+
+    // payment
+    Route::post('/checkout-paystack', [PaymentController::class, 'initialize_payment']);
 });
+
+
+// finalize paystack payment
+Route::get('/finalize_payment', [PaymentController::class, 'finalize_payment']);    

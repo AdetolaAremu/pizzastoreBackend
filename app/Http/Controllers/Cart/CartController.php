@@ -80,9 +80,11 @@ class CartController extends Controller
     public function removecart($cart_item_id)
     {
         if ($cart_item = CartItem::find($cart_item_id)) {
+            
             if ($cart_item->cart->user_id != auth('api')->user()->id) {
                 return response(['message' => 'You do not have write access to this cart item']);
             }
+
             $cart_item->delete();
             return response(['message' => 'Item deleted successfully'], Response::HTTP_ACCEPTED);
         } else {
@@ -92,21 +94,22 @@ class CartController extends Controller
 
     public function getSpecificCart($id)
     {
-
         $cart = Cart::find($id);
 
         if (!$cart) {
             return response(['message' => 'There is no cart with such id'], Response::HTTP_NOT_FOUND);
         }
 
-        return new CartResource($cart, Response::HTTP_ACCEPTED);
+        return new CartResource($cart, Response::HTTP_OK);
         // hello there just to check
     }
 
     public function emptyCart()
     {
         $cart = Cart::where('user_id', auth('api')->user()->id)->first();
+
         $cart->delete();
+        
         return response(['message' => 'Cart has been successfully emptied']);
     }
 }

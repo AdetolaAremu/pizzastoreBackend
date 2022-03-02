@@ -4,18 +4,32 @@ namespace App\Http\Controllers\Order;
 
 use App\Http\Controllers\Controller;
 use App\Models\Cart;
+use App\Models\Order;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response as HttpResponse;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
 {
     // get the order history for a user
-    public function orderHistory()
-    {
-        $logged_in_user = Auth()->user();
-        $order = $logged_in_user->carts()->with('items')->latest()->paginate(10);
-        return response($order);
+    // public function orderHistory()
+    // {
+    //     $logged_in_user = Auth()->user();
+    //     $order = $logged_in_user->cart()->with('items')->latest()->paginate(10);
+    //     return response($order);
+    // }
+
+    public function getAllOrders(){
+        $order = Order::where('user_id', Auth::user()->id)->get();
+
+        return response($order, HttpResponse::HTTP_OK);
+    }
+
+    public function lastFiveOrders(){
+        $order = Order::where('user_id', Auth::user()->id)->latest()->take(5)->get();
+
+        return response($order, HttpResponse::HTTP_OK);
     }
 
     // export order csv

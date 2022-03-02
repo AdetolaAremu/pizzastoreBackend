@@ -22,7 +22,7 @@ class PaymentController extends Controller
 
         DB::beginTransaction();
         try {
-            $total_amount = auth()->user()->cart->Total;
+            $total_amount = auth()->user()->cart->Total * 100;
             $paystack_reference_id = \Paystack::genTranxRef();
 
             $order = Order::create([
@@ -31,7 +31,7 @@ class PaymentController extends Controller
                 'address_one' => $request->address_one,
                 'phone_number' => $request->phone_number,
                 'city' => $request->city,
-                'total_amount' => $total_amount,
+                'total_amout' => $total_amount,
                 'transaction_type' => 'paystack'
             ]);
 
@@ -41,7 +41,7 @@ class PaymentController extends Controller
                     'pizza_id' => auth()->user()->cart->items[$i]->pizza_id,
                     'quantity' => auth()->user()->cart->items[$i]->quantity,
                     'total_amount' => auth()->user()->cart->items[$i]->total_amount,
-                    'pizza_price' => auth()->user()->cart->items[$i]->pizza_price,
+                    'pizza_price' => auth()->user()->cart->items[$i]->price,
                     'pizza_name' => auth()->user()->cart->items[$i]->pizza_name
                 ]);
             }
@@ -66,16 +66,17 @@ class PaymentController extends Controller
 
     public function finalize_payment()
     {
-        return view('payment.paystack');
         $paymentDetails = \Paystack::getPaymentData();
-        if($paymentDetails['status']) {
+        if($paymentDetails['status'] === 'successful') {
             DB::beginTransaction();
             try {
                 $order = Order::where('id', $paymentDetails['data']['metadata']['order_id'])
                     ->where('order_code', $paymentDetails['data']['reference'])
                     ->first();
+                
                 $order->payment_status = 'successful';
                 $order->save();
+                
 
                 $user = User::find($order->user_id);
 
@@ -94,7 +95,7 @@ class PaymentController extends Controller
 
                 DB::commit();
                 return response(["message" => "Payment completed"], Response::HTTP_OK);
-                return view('payment.paystack');
+                // return view('payment.paystack');
             } catch (\Exception $th) {
                 DB::rollBack();
                 return response($th->getMessage());
@@ -117,8 +118,6 @@ class PaymentController extends Controller
                 'raw' => json_encode($paymentDetails['data']),
                 'reason_for_transaction' => $paymentDetails['data']['metadata']['reason_for_transaction']
             ]);
-
-            return view('payment.failed');
         }
     }
 }
