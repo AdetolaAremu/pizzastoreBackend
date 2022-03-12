@@ -17,11 +17,15 @@ use Illuminate\Support\Str;
 
 class PizzaController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $pizza = Pizza::get();
+        $pizza = Pizza::query();
 
-        return PizzaResource::collection($pizza);
+        if ($s = $request->input('s')) {
+            $pizza->whereRaw("name LIKE '%{$s}%'")->orwhereRaw("description LIKE '%{$s}%'");
+        }
+
+        return $pizza->with('images','variant')->get();
     }
 
     public function store(Request $request)

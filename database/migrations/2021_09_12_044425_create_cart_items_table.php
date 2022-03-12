@@ -15,8 +15,8 @@ class CreateCartItemsTable extends Migration
     {
         Schema::create('cart_items', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('cart_id')->references('id')->on('carts')->constrained()->onDelete('cascade');
-            $table->foreignId('pizza_id')->references('id')->on('pizzas')->constrained()->onDelete('cascade');
+            $table->foreignId('cart_id')->references('id')->on('carts')->onDelete('cascade');
+            $table->foreignId('pizza_id')->references('id')->on('pizzas')->onDelete('cascade');
             $table->string('pizza_name');
             $table->string('price');
             $table->integer('quantity');

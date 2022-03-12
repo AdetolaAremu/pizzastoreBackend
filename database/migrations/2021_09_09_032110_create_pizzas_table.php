@@ -19,6 +19,7 @@ class CreatePizzasTable extends Migration
             $table->string('description');
             $table->string('price');
             $table->foreignId('variant_id')->references('id')->on('variants')->constrained();
+            $table->string('featured')->default(0);
             $table->timestamps();
         });
     }

@@ -86,6 +86,7 @@ class CartController extends Controller
             }
 
             $cart_item->delete();
+            
             return response(['message' => 'Item deleted successfully'], Response::HTTP_ACCEPTED);
         } else {
             return response(['message' => 'Item not found'], Response::HTTP_NOT_FOUND);
@@ -101,7 +102,6 @@ class CartController extends Controller
         }
 
         return new CartResource($cart, Response::HTTP_OK);
-        // hello there just to check
     }
 
     public function emptyCart()

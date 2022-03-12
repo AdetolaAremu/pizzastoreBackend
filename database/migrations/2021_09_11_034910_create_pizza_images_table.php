@@ -15,7 +15,7 @@ class CreatePizzaImagesTable extends Migration
     {
         Schema::create('pizza_images', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('pizza_id')->references('id')->on('pizzas')->constrained()->onDelete('cascade');
+            $table->foreignId('pizza_id')->references('id')->on('pizzas')->onDelete('cascade');
             $table->string('image')->nullable();
             $table->string('main')->default(0);
             $table->timestamps();

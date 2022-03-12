@@ -62,7 +62,9 @@ Route::group(['middleware' => 'auth:api'], function () {
     // orders
     Route::group(['prefix' => 'orders'], function () {
         Route::get('/', [OrderController::class, 'getAllOrders']);
+        Route::get('/with-items/{id}', [OrderController::class, 'getOrderWithItems']);
         Route::get('/last-five-orders', [OrderController::class, 'lastFiveOrders']);
+        Route::get('/stats', [OrderController::class, 'getOrderStats']);
         Route::get('/export', [OrderController::class, 'exportcsv']);
     });
 
