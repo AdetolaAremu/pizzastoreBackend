@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Gate;
-
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class PizzaController extends Controller
@@ -28,20 +28,13 @@ class PizzaController extends Controller
         return $pizza->with('images','variant')->get();
     }
 
-    public function store(Request $request)
+    public function store(PizzaCreateRequest $request)
     {
         $admin = Gate::authorize('delete', 'users');
 
         if (!$admin) {
             return response(['message' => 'Unauthorized'], Response::HTTP_UNAUTHORIZED);
         }
-
-        $request->validate([
-            'name' => 'required',
-            'description' => 'required',
-            'price' => 'required',
-            'variant_id' => 'required'
-        ]);
 
         DB::beginTransaction();
         try {
@@ -50,23 +43,16 @@ class PizzaController extends Controller
             $pizza->description = $request->description;
             $pizza->price = $request->price;
             $pizza->variant_id = $request->variant_id;
+            // $pizza->featured = 1;
             $pizza->save();
 
-            if ($request->pizza_images) {
-                for ($i = 0; $i < count($request->pizza_images); $i++) {
-                    $file = $request->pizza_images[$i];
-                    $imageName = time() . Str::random(4) . '.' . $request->pizza_images[$i]->extension();
-                    $path = "images/pizzas";
-                    $documentURL = $path . '/' . $imageName;
-                    $file->move($path, $imageName);
+            $documentURL = $request->file('image')->storePublicly('pizza_images', 's3');
 
-                    PizzaImage::create([
-                        'pizza_id' => $pizza->id,
-                        'image' => $documentURL,
-                        'main' => 0
-                    ]);
-                }
-            }
+            PizzaImage::create([
+                'pizza_id' => $pizza->id,
+                'image' => basename($documentURL),
+                'main' => Storage::disk('s3')->url($documentURL)
+            ]);         
 
             DB::commit();
             return response(['message' => 'Pizza Created Successfully'], Response::HTTP_CREATED);
@@ -108,14 +94,21 @@ class PizzaController extends Controller
 
     public function destroy($id)
     {
-        $admin = Gate::authorize('delete', 'users');
+        Gate::authorize('delete', 'users');
 
-        if (!$admin) {
-            return response(['message' => 'Unauthorized'], Response::HTTP_UNAUTHORIZED);
-        }
+        PizzaImage::where('pizza_id', $id)->each(function ($image) {
+            Storage::disk('s3')->delete('pizza_images/'.$image->image);
+        });
 
         Pizza::destroy($id);
 
         return response(["message" => 'Pizza deleted successfully'], Response::HTTP_OK);
+    }
+
+    public function getFeatured()
+    {
+        $featured = Pizza::where('featured', 1)->get();
+
+        return response($featured, Response::HTTP_OK);
     }
 }

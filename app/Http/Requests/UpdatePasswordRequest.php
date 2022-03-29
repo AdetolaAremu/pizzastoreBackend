@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Symfony\Contracts\Service\Attribute\Required;
+use Illuminate\Validation\Rules\Password;
 
 class UpdatePasswordRequest extends FormRequest
 {
@@ -26,7 +27,12 @@ class UpdatePasswordRequest extends FormRequest
     {
         return [
             'current_password' => 'required',
-            'password' => 'required',
+            'password' => ['required', 'string', 
+                Password::min(6)
+                ->mixedCase()
+                ->numbers()
+                ->letters()
+            ],
             'password_confirm' => 'required|same:password'
         ];
     }

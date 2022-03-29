@@ -27,7 +27,8 @@ class PizzaCreateRequest extends FormRequest
             'name' => 'required|min:5|max:150',
             'price' => 'required',
             'description' => 'required|max:300|min:10',
-            'variant_id' => 'required'
+            'variant_id' => 'required',
+            // 'image' => 'required'
         ];
     }
 }

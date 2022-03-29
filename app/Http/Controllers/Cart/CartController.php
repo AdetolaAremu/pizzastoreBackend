@@ -112,4 +112,15 @@ class CartController extends Controller
         
         return response(['message' => 'Cart has been successfully emptied']);
     }
+
+    public function checkIfIDExist($id)
+    {
+        $getDBCart = CartItem::where('pizza_id', $id)->first();
+
+        if (!$getDBCart) {
+            return response('false', Response::HTTP_OK);
+        }
+
+        return response('true', Response::HTTP_OK);
+    }
 }
