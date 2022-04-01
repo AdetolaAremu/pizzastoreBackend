@@ -41,7 +41,7 @@ class CartController extends Controller
                 'price' => $request->price,
                 'quantity' => 1,
                 'total_amount' =>  (int) $request->price * (int) 1,
-                'image' => $pizzaimage->image ?? null,
+                'image' => $pizzaimage->main ?? null,
             ]);
 
             return response(['message' => 'Added to cart'], Response::HTTP_CREATED);

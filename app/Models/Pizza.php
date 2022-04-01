@@ -23,6 +23,6 @@ class Pizza extends Model
 
     public function images()
     {
-        return $this->hasMany(PizzaImage::class);
+        return $this->hasOne(PizzaImage::class);
     }
 }

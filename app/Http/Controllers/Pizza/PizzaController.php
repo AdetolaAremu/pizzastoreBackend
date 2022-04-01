@@ -43,7 +43,7 @@ class PizzaController extends Controller
             $pizza->description = $request->description;
             $pizza->price = $request->price;
             $pizza->variant_id = $request->variant_id;
-            // $pizza->featured = 1;
+            $pizza->featured = 1;
             $pizza->save();
 
             $documentURL = $request->file('image')->storePublicly('pizza_images', 's3');
@@ -52,7 +52,7 @@ class PizzaController extends Controller
                 'pizza_id' => $pizza->id,
                 'image' => basename($documentURL),
                 'main' => Storage::disk('s3')->url($documentURL)
-            ]);         
+            ]);
 
             DB::commit();
             return response(['message' => 'Pizza Created Successfully'], Response::HTTP_CREATED);
@@ -107,7 +107,7 @@ class PizzaController extends Controller
 
     public function getFeatured()
     {
-        $featured = Pizza::where('featured', 1)->get();
+        $featured = Pizza::where('featured', 1)->with('images','variant')->get();
 
         return response($featured, Response::HTTP_OK);
     }
