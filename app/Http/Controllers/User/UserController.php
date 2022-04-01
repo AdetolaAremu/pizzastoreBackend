@@ -19,7 +19,7 @@ class UserController extends Controller
     {
         $admin = Gate::authorize('delete', 'users');
 
-        if ($admin) {
+        if (!$admin) {
             return response(['message' => 'Unauthorized'], Response::HTTP_UNAUTHORIZED);
         }
 

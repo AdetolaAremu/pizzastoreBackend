@@ -9,6 +9,7 @@ use App\Http\Controllers\Pizza\PizzaController;
 use App\Http\Controllers\Pizza\PizzaReviewController;
 use App\Http\Controllers\Pizza\VariantController;
 use App\Http\Controllers\Role\RoleController;
+use App\Http\Controllers\Stats\StatsController;
 use App\Http\Controllers\User\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -78,6 +79,9 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     // payment
     Route::post('/checkout-paystack', [PaymentController::class, 'initialize_payment']);
+
+    // admin stats
+    Route::get('/admin-stats', [StatsController::class, 'adminStats']);
 });
 
 
