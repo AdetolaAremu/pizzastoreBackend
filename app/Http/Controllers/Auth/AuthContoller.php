@@ -22,7 +22,7 @@ class AuthContoller extends Controller
             'last_name' => $request->last_name,
             'middle_name' => $request->middle_name,
             'email' => $request->email,
-            'role_id' => 1,
+            'role_id' => 2,
             'password' => Hash::make($request->input('password'))
         ]);
 
