@@ -38,7 +38,7 @@ class RolePermissionSeeder extends Seeder
         //     }
         // }
 
-        $viewer = Role::whereName('User')->first();
+        $viewer = Role::whereName('user')->first();
 
         $userRole = [
             'view_pizza',
