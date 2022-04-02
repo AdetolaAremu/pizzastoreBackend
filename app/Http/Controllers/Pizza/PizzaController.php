@@ -43,7 +43,7 @@ class PizzaController extends Controller
             $pizza->description = $request->description;
             $pizza->price = $request->price;
             $pizza->variant_id = $request->variant_id;
-            $pizza->featured = 1;
+            // $pizza->featured = 1;
             $pizza->save();
 
             $documentURL = $request->file('image')->storePublicly('pizza_images', 's3');
