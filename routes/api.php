@@ -22,6 +22,9 @@ Route::get('/all-pizzas', [PizzaController::class, 'index']);
 Route::get('/pizza/{id}', [PizzaController::class, 'show']);
 Route::get('/featured-pizzas', [PizzaController::class, 'getFeatured']);
 
+// get cart
+Route::get('/carts', [CartController::class, 'getcart']);
+
 Route::group(['middleware' => 'auth:api'], function () {
     // logout
     Route::post('/logout', [AuthContoller::class, 'logout']);
@@ -54,7 +57,6 @@ Route::group(['middleware' => 'auth:api'], function () {
     // Carts
     Route::group(['prefix' => 'carts'], function () {
         Route::post('/', [CartController::class, 'addToCart']);
-        Route::get('/', [CartController::class, 'getcart']);
         Route::put('/update-cart/{cart_item_id}', [CartController::class, 'updatecart']);
         Route::get('/{id}', [CartController::class, 'getSpecificCart']);
         Route::delete('/empty', [CartController::class, 'emptyCart']);
