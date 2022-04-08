@@ -72,6 +72,11 @@ class CartController extends Controller
 
     public function getcart()
     {
+        if(!Auth::user()){
+            $cart = Cart::get();
+            return CartResource::collection($cart, Response::HTTP_ACCEPTED);
+        }
+
         $logged_in_user = Auth()->user()->id;
         $cart = Cart::where('user_id', $logged_in_user)->with('items')->get();
         return CartResource::collection($cart, Response::HTTP_ACCEPTED);
