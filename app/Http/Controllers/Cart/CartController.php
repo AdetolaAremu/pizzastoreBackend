@@ -12,7 +12,6 @@ use App\Models\PizzaImage;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
-
 class CartController extends Controller
 {
     public function addToCart(AddToCartRequest $request)
@@ -70,14 +69,9 @@ class CartController extends Controller
         }
     }
 
-    public function getcart()
+    public function getCart()
     {
-        if(!Auth::user()){
-            $cart = Cart::get();
-            return CartResource::collection($cart, Response::HTTP_ACCEPTED);
-        }
-
-        $logged_in_user = Auth()->user()->id;
+        $logged_in_user = Auth::user()->id;
         $cart = Cart::where('user_id', $logged_in_user)->with('items')->get();
         return CartResource::collection($cart, Response::HTTP_ACCEPTED);
     }

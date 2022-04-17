@@ -23,9 +23,11 @@ Route::get('/pizza/{id}', [PizzaController::class, 'show']);
 Route::get('/featured-pizzas', [PizzaController::class, 'getFeatured']);
 
 // get cart
-Route::get('/carts', [CartController::class, 'getcart']);
+// Route::get('/cartss', [CartController::class, 'getUserCart']);
 
 Route::group(['middleware' => 'auth:api'], function () {
+    Route::get('/carts', [CartController::class, 'getCart']);
+
     // logout
     Route::post('/logout', [AuthContoller::class, 'logout']);
 
