@@ -73,6 +73,11 @@ class CartController extends Controller
     {
         $logged_in_user = Auth::user()->id;
         $cart = Cart::where('user_id', $logged_in_user)->with('items')->get();
+        
+        if (!Cart::where('user_id', $logged_in_user)) {
+            return response(null);
+        }
+
         return CartResource::collection($cart, Response::HTTP_ACCEPTED);
     }
 
